@@ -1,5 +1,6 @@
 package com.Evaluation.securexam.service;
 
+import com.Evaluation.securexam.exception.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.Evaluation.securexam.entity.RefreshToken;
@@ -39,11 +40,10 @@ public class RefreshTokenService {
 
         return refreshTokenRepository
                 .findByToken(token)
-                .orElseThrow(
-                        () -> new RuntimeException(
-                                "Refresh token not found"
-                        )
-                );
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Refresh Token not found"
+                        ));
     }
 
     @Transactional

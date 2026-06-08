@@ -4,6 +4,7 @@ import com.Evaluation.securexam.dto.request.CreateExamRequest;
 import com.Evaluation.securexam.dto.request.UpdateExamRequest;
 import com.Evaluation.securexam.dto.response.ExamResponse;
 import com.Evaluation.securexam.entity.Exam;
+import com.Evaluation.securexam.exception.ResourceNotFoundException;
 import com.Evaluation.securexam.repository.ExamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,9 @@ public class ExamService {
 
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Exam not found"));
+                        new ResourceNotFoundException(
+                                "Exam not found"
+                        ));
 
         return ExamResponse.builder()
                 .id(exam.getId())
@@ -75,7 +78,9 @@ public class ExamService {
 
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Exam not found"));
+                        new ResourceNotFoundException(
+                                "Exam not found"
+                        ));
 
         exam.setTitle(request.getTitle());
         exam.setDescription(request.getDescription());
@@ -101,7 +106,9 @@ public class ExamService {
 
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Exam not found"));
+                        new ResourceNotFoundException(
+                                "Exam not found"
+                        ));
 
         examRepository.delete(exam);
 

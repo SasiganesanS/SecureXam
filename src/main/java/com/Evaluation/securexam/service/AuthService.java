@@ -10,6 +10,7 @@ import com.Evaluation.securexam.dto.request.RegisterRequest;
 import com.Evaluation.securexam.dto.response.LoginResponse;
 import com.Evaluation.securexam.dto.response.RegisterResponse;
 import com.Evaluation.securexam.entity.User;
+import com.Evaluation.securexam.exception.ResourceNotFoundException;
 import com.Evaluation.securexam.repository.UserRepository;
 import com.Evaluation.securexam.security.CustomUserDetailsService;
 import com.Evaluation.securexam.security.JwtService;
@@ -119,11 +120,10 @@ public class AuthService {
     public String logout(LogoutRequest request) {
 
         User user = userRepository.findByUsername(request.getUsername())
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "User not found"
-                                )
-                        );
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found"
+                        ));
 
         refreshTokenService.deleteByUser(user);
 

@@ -5,6 +5,7 @@ import com.Evaluation.securexam.dto.request.UpdateQuestionRequest;
 import com.Evaluation.securexam.dto.response.QuestionResponse;
 import com.Evaluation.securexam.entity.Exam;
 import com.Evaluation.securexam.entity.Question;
+import com.Evaluation.securexam.exception.ResourceNotFoundException;
 import com.Evaluation.securexam.repository.ExamRepository;
 import com.Evaluation.securexam.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,9 @@ public class QuestionService {
 
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() ->
-                        new RuntimeException("Exam not found"));
+                        new ResourceNotFoundException(
+                                "Exam not found"
+                        ));
 
         Question question = Question.builder()
                 .questionText(request.getQuestionText())
@@ -63,8 +66,9 @@ public class QuestionService {
         Question question =
                 questionRepository.findById(questionId)
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Question not found"));
+                                new ResourceNotFoundException(
+                                        "Question not found"
+                                ));
 
         return mapToResponse(question);
     }
@@ -76,8 +80,9 @@ public class QuestionService {
         Question question =
                 questionRepository.findById(questionId)
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Question not found"));
+                                new ResourceNotFoundException(
+                                        "Question not found"
+                                ));
 
         question.setQuestionText(
                 request.getQuestionText());
@@ -112,8 +117,9 @@ public class QuestionService {
         Question question =
                 questionRepository.findById(questionId)
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Question not found"));
+                                new ResourceNotFoundException(
+                                        "Question not found"
+                                ));
 
         questionRepository.delete(question);
 
@@ -124,7 +130,7 @@ public class QuestionService {
             Question question) {
 
         return QuestionResponse.builder()
-                .questionId(question.getQuestionId())
+                .id(question.getId())
                 .questionText(question.getQuestionText())
                 .optionA(question.getOptionA())
                 .optionB(question.getOptionB())

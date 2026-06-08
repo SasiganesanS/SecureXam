@@ -14,7 +14,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long questionId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String questionText;

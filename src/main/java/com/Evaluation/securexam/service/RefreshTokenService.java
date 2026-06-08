@@ -22,16 +22,14 @@ public class RefreshTokenService {
             String token,
             LocalDateTime expiryDate) {
 
-        refreshTokenRepository
-                .findByUser(user)
-                .ifPresent(refreshTokenRepository::delete);
-
         RefreshToken refreshToken =
-                RefreshToken.builder()
-                        .user(user)
-                        .token(token)
-                        .expiryDate(expiryDate)
-                        .build();
+                refreshTokenRepository
+                        .findByUser(user)
+                        .orElse(new RefreshToken());
+
+        refreshToken.setUser(user);
+        refreshToken.setToken(token);
+        refreshToken.setExpiryDate(expiryDate);
 
         refreshTokenRepository.save(refreshToken);
     }

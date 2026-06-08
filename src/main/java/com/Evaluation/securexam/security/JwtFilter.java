@@ -1,6 +1,6 @@
 package com.Evaluation.securexam.security;
 
-
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,8 +41,28 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        String username =
-                jwtService.extractUsername(token);
+        String username = null;
+
+        try {
+
+             username = jwtService.extractUsername(token);
+
+            // remaining logic
+
+        } catch (ExpiredJwtException e) {
+
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.getWriter().write("""
+        {
+            "error":"JWT Token Expired"
+        }
+        """);
+
+            return;
+        }
+
 
         if (username != null &&
                 SecurityContextHolder

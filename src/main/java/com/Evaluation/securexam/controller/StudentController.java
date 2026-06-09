@@ -5,6 +5,7 @@ import com.Evaluation.securexam.dto.response.ExamAttemptResponse;
 import com.Evaluation.securexam.dto.response.ResultResponse;
 import com.Evaluation.securexam.dto.response.StudentQuestionResponse;
 import com.Evaluation.securexam.service.AttemptService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class StudentController {
 
     @PostMapping("/exams/{examId}/start")
     @PreAuthorize("hasRole('STUDENT')")
-    public ExamAttemptResponse startExam(@PathVariable Long examId, Authentication authentication) {
+    public ExamAttemptResponse startExam(@Valid @PathVariable Long examId, Authentication authentication) {
 
         return attemptService.startExam(
                 examId,
@@ -30,7 +31,7 @@ public class StudentController {
     }
     @GetMapping("/attempts/{attemptId}/questions")
     @PreAuthorize("hasRole('STUDENT')")
-    public List<StudentQuestionResponse> getQuestionsForAttempt(
+    public List<StudentQuestionResponse> getQuestionsForAttempt(@Valid
             @PathVariable Long attemptId) {
 
         return attemptService
@@ -49,7 +50,7 @@ public class StudentController {
     }
     @GetMapping("/results/{attemptId}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResultResponse getResultByAttemptId(
+    public ResultResponse getResultByAttemptId(@Valid
             @PathVariable Long attemptId,
             Authentication authentication) {
 
@@ -59,4 +60,5 @@ public class StudentController {
                         authentication.getName()
                 );
     }
+
 }

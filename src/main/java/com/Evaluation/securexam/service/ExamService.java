@@ -7,6 +7,10 @@ import com.Evaluation.securexam.entity.Exam;
 import com.Evaluation.securexam.exception.ResourceNotFoundException;
 import com.Evaluation.securexam.repository.ExamRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,21 +45,30 @@ public class ExamService {
                 .endTime(savedExam.getEndTime())
                 .build();
     }
-    public List<ExamResponse> getAllExams() {
+        public Page<ExamResponse> getAllExams(int page, int size) {
 
-        return examRepository.findAll()
-                .stream()
-                .map(exam -> ExamResponse.builder()
-                        .id(exam.getId())
-                        .title(exam.getTitle())
-                        .description(exam.getDescription())
-                        .duration(exam.getDuration())
-                        .totalMarks(exam.getTotalMarks())
-                        .startTime(exam.getStartTime())
-                        .endTime(exam.getEndTime())
-                        .build())
-                .toList();
-    }
+            Pageable pageable =
+                    PageRequest.of(
+                            page,
+                            size,
+                            Sort.by("id")
+                                    .ascending()
+                    );
+
+            return examRepository
+                    .findAll(pageable)
+                    .map(exam ->
+                            ExamResponse.builder()
+                                    .id(exam.getId())
+                                    .title(exam.getTitle())
+                                    .description(exam.getDescription())
+                                    .duration(exam.getDuration())
+                                    .totalMarks(exam.getTotalMarks())
+                                    .startTime(exam.getStartTime())
+                                    .endTime(exam.getEndTime())
+                                    .build()
+                    );
+        }
     public ExamResponse getExamById(Long id) {
 
         Exam exam = examRepository.findById(id)
@@ -89,8 +102,7 @@ public class ExamService {
         exam.setStartTime(request.getStartTime());
         exam.setEndTime(request.getEndTime());
 
-        Exam updatedExam =
-                examRepository.save(exam);
+        Exam updatedExam = examRepository.save(exam);
 
         return ExamResponse.builder()
                 .id(updatedExam.getId())

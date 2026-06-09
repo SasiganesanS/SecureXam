@@ -39,6 +39,28 @@ public class AttemptService {
                         new ResourceNotFoundException(
                                 "Exam not found"
                         ));
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isBefore(exam.getStartTime())){
+            throw new RuntimeException(
+                    "Exam has not started yet"
+            );
+        }
+
+        if(now.isAfter(exam.getEndTime())){
+            throw new RuntimeException(
+                    "Exam has already ended"
+            );
+        }
+
+
+        ExamAttempt existingAttempt = examAttemptRepository
+                        .findByStudentAndExam(student, exam).orElse(null);
+
+        if (existingAttempt != null) {
+
+            throw new RuntimeException("You have already attempted this exam");
+        }
 
         ExamAttempt attempt = ExamAttempt.builder()
                         .student(student)
@@ -91,16 +113,28 @@ public class AttemptService {
                 )
                 .toList();
     }
-    public ResultResponse submitExam(
-            Long attemptId,
-            SubmitExamRequest request) {
+    public ResultResponse submitExam(Long attemptId, SubmitExamRequest request) {
 
-        ExamAttempt attempt =
-                examAttemptRepository.findById(attemptId)
+
+        ExamAttempt attempt = examAttemptRepository.findById(attemptId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Attempt not found"
                                 ));
+        LocalDateTime allowedEndTime =
+                attempt.getStartTime()
+                        .plusMinutes(
+                                attempt.getExam()
+                                        .getDuration()
+                        );
+
+        if(LocalDateTime.now()
+                .isAfter(allowedEndTime)){
+
+            throw new RuntimeException(
+                    "Exam time is over"
+            );
+        }
 
         int score = 0;
 
@@ -183,4 +217,5 @@ public class AttemptService {
                         attempt.getSubmitTime())
                 .build();
     }
+
 }

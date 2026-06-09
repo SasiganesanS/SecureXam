@@ -2,6 +2,7 @@ package com.Evaluation.securexam.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -10,9 +11,7 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(
-            ResourceNotFoundException.class
-    )
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse>
     handleResourceNotFound(
             ResourceNotFoundException ex) {
@@ -32,9 +31,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(
-            RuntimeException.class
-    )
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse>
     handleRuntimeException(
             RuntimeException ex) {
@@ -52,5 +49,26 @@ public class GlobalExceptionHandler {
                 response,
                 HttpStatus.BAD_REQUEST
         );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse>
+    handleValidationException(
+            MethodArgumentNotValidException ex) {
+
+        String message =
+                ex.getBindingResult()
+                        .getFieldError()
+                        .getDefaultMessage();
+
+        ErrorResponse response =
+                ErrorResponse.builder()
+                        .message(message)
+                        .status(400)
+                        .timestamp(LocalDateTime.now())
+                        .build();
+
+        return ResponseEntity.badRequest()
+                .body(response);
     }
 }

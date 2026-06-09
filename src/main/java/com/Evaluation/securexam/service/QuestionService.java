@@ -41,8 +41,7 @@ public class QuestionService {
                 .exam(exam)
                 .build();
 
-        Question savedQuestion =
-                questionRepository.save(question);
+        Question savedQuestion = questionRepository.save(question);
 
         return mapToResponse(savedQuestion);
     }
@@ -63,8 +62,7 @@ public class QuestionService {
     public QuestionResponse getQuestionById(
             Long questionId) {
 
-        Question question =
-                questionRepository.findById(questionId)
+        Question question = questionRepository.findById(questionId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Question not found"
@@ -84,29 +82,21 @@ public class QuestionService {
                                         "Question not found"
                                 ));
 
-        question.setQuestionText(
-                request.getQuestionText());
+        question.setQuestionText(request.getQuestionText());
 
-        question.setOptionA(
-                request.getOptionA());
+        question.setOptionA(request.getOptionA());
 
-        question.setOptionB(
-                request.getOptionB());
+        question.setOptionB(request.getOptionB());
 
-        question.setOptionC(
-                request.getOptionC());
+        question.setOptionC(request.getOptionC());
 
-        question.setOptionD(
-                request.getOptionD());
+        question.setOptionD(request.getOptionD());
 
-        question.setCorrectAnswer(
-                request.getCorrectAnswer());
+        question.setCorrectAnswer(request.getCorrectAnswer());
 
-        question.setMarks(
-                request.getMarks());
+        question.setMarks(request.getMarks());
 
-        Question updatedQuestion =
-                questionRepository.save(question);
+        Question updatedQuestion = questionRepository.save(question);
 
         return mapToResponse(updatedQuestion);
     }
@@ -114,8 +104,7 @@ public class QuestionService {
     public String deleteQuestion(
             Long questionId) {
 
-        Question question =
-                questionRepository.findById(questionId)
+        Question question = questionRepository.findById(questionId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Question not found"

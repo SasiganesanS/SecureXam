@@ -2,6 +2,7 @@ package com.Evaluation.securexam.dto.request;
 
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.Map;

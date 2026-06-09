@@ -4,6 +4,7 @@ import com.Evaluation.securexam.dto.request.CreateQuestionRequest;
 import com.Evaluation.securexam.dto.request.UpdateQuestionRequest;
 import com.Evaluation.securexam.dto.response.QuestionResponse;
 import com.Evaluation.securexam.service.QuestionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class QuestionController {
 
     @PostMapping("/admin/exams/{examId}/questions")
     @PreAuthorize("hasRole('ADMIN')")
-    public QuestionResponse addQuestion(
+    public QuestionResponse addQuestion(@Valid
             @PathVariable Long examId,
             @RequestBody CreateQuestionRequest request) {
 
@@ -30,7 +31,7 @@ public class QuestionController {
 
     @GetMapping("/admin/exams/{examId}/questions")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<QuestionResponse> getQuestionsByExam(
+    public List<QuestionResponse> getQuestionsByExam(@Valid
             @PathVariable Long examId) {
 
         return questionService.getQuestionsByExam(
@@ -40,7 +41,7 @@ public class QuestionController {
 
     @GetMapping("/questions/{questionId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public QuestionResponse getQuestionById(
+    public QuestionResponse getQuestionById(@Valid
             @PathVariable Long questionId) {
 
         return questionService.getQuestionById(
@@ -50,7 +51,7 @@ public class QuestionController {
 
     @PutMapping("/questions/{questionId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public QuestionResponse updateQuestion(
+    public QuestionResponse updateQuestion(@Valid
             @PathVariable Long questionId,
             @RequestBody UpdateQuestionRequest request) {
 
@@ -62,7 +63,7 @@ public class QuestionController {
 
     @DeleteMapping("/questions/{questionId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String deleteQuestion(
+    public String deleteQuestion(@Valid
             @PathVariable Long questionId) {
 
         return questionService.deleteQuestion(
